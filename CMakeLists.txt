@@ -17,5 +17,5 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 find_package(OpenGL REQUIRED)
 
-add_executable(cg-labor4 main.cpp ${GLAD_SOURCES})
-target_link_libraries(cg-labor4 OpenGL::GL glfw)
+add_executable(main main.cpp ${GLAD_SOURCES})
+target_link_libraries(main OpenGL::GL glfw)

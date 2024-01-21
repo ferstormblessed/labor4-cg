@@ -9,10 +9,10 @@ struct t_vec3 {
   t_vec3(char *buf) // generiere vec3 aus string
   {
     char *next;
-    strtok_s(buf, " ", &next);
-    x = atof(strtok_s(next, " ", &next));
-    y = atof(strtok_s(next, " ", &next));
-    z = atof(strtok_s(next, " ", &next));
+    strtok_r(buf, " ", &next);
+    x = atof(strtok_r(next, " ", &next));
+    y = atof(strtok_r(next, " ", &next));
+    z = atof(strtok_r(next, " ", &next));
   }
   t_vec3() { x = y = z = 0; }
   float x, y, z;
@@ -22,9 +22,9 @@ struct t_vec2 {
   t_vec2(char *buf) // generiere vec2 aus string
   {
     char *next;
-    strtok_s(buf, " ", &next);
-    u = atof(strtok_s(next, " ", &next));
-    v = atof(strtok_s(next, " ", &next));
+    strtok_r(buf, " ", &next);
+    u = atof(strtok_r(next, " ", &next));
+    v = atof(strtok_r(next, " ", &next));
   }
   float u, v;
 };
@@ -33,17 +33,17 @@ struct t_triangleIndex {
 
   t_triangleIndex(char *vert1, char *vert2, char *vert3) {
     char *next;
-    ver[0] = atoi(strtok_s(vert1, "/", &next));
-    tex[0] = atoi(strtok_s(next, "/", &next));
-    norm[0] = atoi(strtok_s(next, "/", &next));
+    ver[0] = atoi(strtok_r(vert1, "/", &next));
+    tex[0] = atoi(strtok_r(next, "/", &next));
+    norm[0] = atoi(strtok_r(next, "/", &next));
 
-    ver[1] = atoi(strtok_s(vert2, "/", &next));
-    tex[1] = atoi(strtok_s(next, "/", &next));
-    norm[1] = atoi(strtok_s(next, "/", &next));
+    ver[1] = atoi(strtok_r(vert2, "/", &next));
+    tex[1] = atoi(strtok_r(next, "/", &next));
+    norm[1] = atoi(strtok_r(next, "/", &next));
 
-    ver[2] = atoi(strtok_s(vert3, "/", &next));
-    tex[2] = atoi(strtok_s(next, "/", &next));
-    norm[2] = atoi(strtok_s(next, "/", &next));
+    ver[2] = atoi(strtok_r(vert3, "/", &next));
+    tex[2] = atoi(strtok_r(next, "/", &next));
+    norm[2] = atoi(strtok_r(next, "/", &next));
   }
   int ver[3];
   int tex[3];
@@ -79,6 +79,7 @@ struct myVertexType {
 // vertices, returns VertexArray
 myVertexType *loadModel(const char *filename, int *number) {
   FILE *f = fopen(filename, "r");
+  // printf("file --> %ld\n", sizeof(f));
   t_vec3 *vertexCoordinates = NULL;
   t_vec3 *vertexNormals = NULL;
   t_vec2 *vertexTextureUV;
@@ -98,6 +99,7 @@ myVertexType *loadModel(const char *filename, int *number) {
     printf("Objekt Datei %s gefunden!\n", filename);
 
   char buf[255];
+  // printf("buf --> %d\n", buf[0]);
   while (fgets(buf, 255, f)) {
     if (buf[0] == 'v')
       switch (buf[1]) {
@@ -115,8 +117,9 @@ myVertexType *loadModel(const char *filename, int *number) {
       }
     if (buf[0] == 'f')
       numTable++;
-    //	printf("%s", buf);
+    // printf("%s", buf);
   }
+  // printf("buf --> %d\n", buf[0]);
   fseek(f, 0, SEEK_SET);
   printf("Gefunden wurden %d Vertexe, %d Normalen, %d Texturekoordinaten und "
          "eine Tabelle mit %d Dreiecken\n",
@@ -164,10 +167,10 @@ myVertexType *loadModel(const char *filename, int *number) {
       char *vert2;
       char *vert3;
 
-      strtok_s(buf, " ", &next); // f away
-      vert1 = strtok_s(next, " ", &next);
-      vert2 = strtok_s(next, " ", &next);
-      vert3 = strtok_s(next, " ", &next);
+      strtok_r(buf, " ", &next); // f away
+      vert1 = strtok_r(next, " ", &next);
+      vert2 = strtok_r(next, " ", &next);
+      vert3 = strtok_r(next, " ", &next);
 
       triangles[numTable++] = t_triangleIndex(vert1, vert2, vert3);
     }

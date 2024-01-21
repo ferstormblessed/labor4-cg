@@ -112,14 +112,11 @@ int main(void) {
       /*7*/ myVertexType(-1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 0.0f)  // schwarz
   };
 
-  float bearZoom = 0.4;
-  float planeZoom = 0.17;
-
   // verkleinere Würfelkoordinaten
   for (int i = 0; i < 8; i++) {
-    cubeEdges[i].x *= bearZoom;
-    cubeEdges[i].y *= bearZoom;
-    cubeEdges[i].z *= bearZoom;
+    cubeEdges[i].x *= 0.5;
+    cubeEdges[i].y *= 0.5;
+    cubeEdges[i].z *= 0.5;
   }
 
   // linke Seite -- verde -- acabado
@@ -265,10 +262,6 @@ int main(void) {
   glfwMakeContextCurrent(window);   // Verbindung mit dem Fenster
   gladLoadGL(glfwGetProcAddress);   // Laden der Fuktionszeiger
 
-  // Load Bear
-  int bearNumber;
-  // myVertexType *bear = loadModel("../Textures/Bear.bmp", &bearNumber);
-
   // Load bitmap
   int width, height;
   unsigned char *pictureData =
@@ -343,7 +336,6 @@ int main(void) {
   // Aufbau und Übermittlung des Vertex-Buffers
   glGenBuffers(1, &vertex_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-  // change bear <- -> vertices
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
   // Assuming uv is at index 8 and 9 in your myVertexType struct
