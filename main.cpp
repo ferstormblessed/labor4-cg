@@ -53,10 +53,10 @@ struct myVertexType // selbst definierter Datentyp für die Shaderprogramme
 
 myVertexType vertices[36];
 
-float ambfac = 0.7;
-float diffac = 0.3;
+float ambfac = 0.3;
+float diffac = 0.7;
 
-float specfac = 0.2;
+float specfac = 0.6;
 int shinefac = 16;
 
 // Key-Callback
@@ -112,11 +112,14 @@ int main(void) {
       /*7*/ myVertexType(-1.0f, +1.0f, -1.0f, 0.0f, 0.0f, 0.0f)  // schwarz
   };
 
+  float bearZoom = 0.4;
+  float planeZoom = 0.17;
+
   // verkleinere Würfelkoordinaten
   for (int i = 0; i < 8; i++) {
-    cubeEdges[i].x *= 0.5;
-    cubeEdges[i].y *= 0.5;
-    cubeEdges[i].z *= 0.5;
+    cubeEdges[i].x *= bearZoom;
+    cubeEdges[i].y *= bearZoom;
+    cubeEdges[i].z *= bearZoom;
   }
 
   // linke Seite -- verde -- acabado
@@ -205,7 +208,7 @@ int main(void) {
   vertices[22] = myVertexType(cubeEdges[4], v3_22, v2_22);
   vertices[23] = myVertexType(cubeEdges[7], v3_23, v2_23);
 
-  // Hinten -- naranja
+  // Hinten -- naranja -- acabado
   vec3 v3_24 = {0, 0, -1};
   vec3 v3_25 = {0, 0, -1};
   vec3 v3_26 = {0, 0, -1};
@@ -261,6 +264,10 @@ int main(void) {
                      key_callback); // Key-Callback setzten (Funktion oben)
   glfwMakeContextCurrent(window);   // Verbindung mit dem Fenster
   gladLoadGL(glfwGetProcAddress);   // Laden der Fuktionszeiger
+
+  // Load Bear
+  int bearNumber;
+  // myVertexType *bear = loadModel("../Textures/Bear.bmp", &bearNumber);
 
   // Load bitmap
   int width, height;
@@ -336,6 +343,7 @@ int main(void) {
   // Aufbau und Übermittlung des Vertex-Buffers
   glGenBuffers(1, &vertex_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+  // change bear <- -> vertices
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
   // Assuming uv is at index 8 and 9 in your myVertexType struct
@@ -376,8 +384,8 @@ int main(void) {
     mat4x4_rotate_Z(m, m,
                     (float)glfwGetTime()); // Auf die Matrix m wird eine
                                            // Rotation um Z aufmultipliziert
-    mat4x4_rotate_X(m, m, 10 * 2 * PI / 360 * (float)glfwGetTime()); //
-    // Auf
+    mat4x4_rotate_X(m, m, 10 * 2 * PI / 360 * (float)glfwGetTime());
+    // // Auf
     //   die Matrix m wird eine Rotation um Y aufmultipliziert
     mat4x4_rotate_Y(m, m, 2 * PI * 10 / 360 * sin((float)glfwGetTime()));
 
@@ -386,13 +394,16 @@ int main(void) {
         (const GLfloat *)
             m); // Die Matrix wird in das Shader-Programm übertragen
 
-    glUniform1f(
-        ambient,
-        ambfac); // Der ambiente Faktor wird in das Shader-Programm übertragen
+    glUniform1f(ambient, ambfac);
+    // Der ambiente Faktor wird in das Shader-Programm übertragen
     glUniform1f(diffuse, diffac);
     glUniform1f(specular, specfac);
     glUniform1i(shininess, shinefac);
 
+    // printf("ambfac=%.2f\n", ambfac);
+    // printf("diffac=%.2f\n", diffac);
+    // printf("specfac=%.2f\n", specfac);
+    // printf("shinefac=%.2d\n", shinefac);
     glDrawArrays(GL_TRIANGLES, 0, 36); // Ein Dreieck wird gezeichnet
 
     glfwSwapBuffers(window);
